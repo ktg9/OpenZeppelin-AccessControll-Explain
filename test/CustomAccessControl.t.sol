@@ -54,6 +54,9 @@ contract TestAccessControl is Test {
         vm.stopPrank();
     }
 
+    /**
+        Default admin (0x00) is the default admin role for all roles
+    */
     function testDefaultAdminRole() public{
         // Default admin is the default admin role for any role
         bytes32 ANY_ROLE = keccak256("ANY_ROLE");
@@ -62,6 +65,16 @@ contract TestAccessControl is Test {
         vm.prank(defaultAdmin);
         accessControl.grantRole(ANY_ROLE, bob);
         assertEq(accessControl.hasRole(ANY_ROLE, bob), true);
+    }
+
+    /**
+        A user can renounce his/her own role
+    */
+    function testRenounceRole() public {
+        // Minter renounce his/her role
+        vm.prank(minter);
+        accessControl.renounceRole(MINTER, minter);
+        assertEq(accessControl.hasRole(MINTER, minter), false);
 
     }
 }
